@@ -2,7 +2,7 @@ import Image from "next/image";
 import { LazyMotion, domAnimation, m } from "framer-motion";
 import { useState } from "react";
 export default function Home() {
-	const [email, setEmail] = useState("email");
+	const [email, setEmail] = useState("");
 	const [status, setStatus] = useState("");
 
 	return (
