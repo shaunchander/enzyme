@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	html,
+	body {
+		@apply overscroll-none;
+	}
+
+	input,
+	button {
+		@apply focus:outline-none focus-visible:ring-2 focus-visible:ring-glee/20 transition duration-300 ease-in-out;
+	}
+}
