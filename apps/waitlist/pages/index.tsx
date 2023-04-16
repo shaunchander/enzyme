@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { LazyMotion, domAnimation, m, useMotionValue } from "framer-motion";
-import { useState, useMemo, useCallback, type MouseEvent } from "react";
+import { useState, useMemo, useCallback, type MouseEventHandler } from "react";
 import { z } from "zod";
 
 enum STATUS {
@@ -21,8 +21,8 @@ export default function Home() {
 		return z.string().email();
 	}, []);
 
-	const handleMouseMove = useCallback(
-		(e: MouseEvent<HTMLDivElement, MouseEvent>) => {
+	const handleMouseMove: MouseEventHandler<HTMLDivElement> = useCallback(
+		(e) => {
 			const rect = e.currentTarget.getBoundingClientRect();
 			const x = e.clientX - rect.left;
 			const y = e.clientY - rect.top;
