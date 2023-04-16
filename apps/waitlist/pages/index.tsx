@@ -1,13 +1,45 @@
 import Image from "next/image";
-import { LazyMotion, domAnimation, m } from "framer-motion";
-import { useState } from "react";
+import { LazyMotion, domAnimation, m, useMotionValue } from "framer-motion";
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { z } from "zod";
+
+enum STATUS {
+	IDLE,
+	ERROR,
+	SUCCESS,
+	INVALID_EMAIL,
+}
+
 export default function Home() {
 	const [email, setEmail] = useState("");
-	const [status, setStatus] = useState("");
+	const [status, setStatus] = useState<STATUS>(STATUS.IDLE);
+
+	const mouseX = useMotionValue(0);
+	const mouseY = useMotionValue(0);
+
+	const emailSchema = useMemo(() => {
+		return z.string().email();
+	}, []);
+
+	const handleMouseMove = useCallback(
+		(e: MouseEvent<HTMLDivElement, MouseEvent>) => {
+			const rect = e.currentTarget.getBoundingClientRect();
+			const x = e.clientX - rect.left;
+			const y = e.clientY - rect.top;
+
+			mouseX.set(x);
+			mouseY.set(y);
+		},
+		[]
+	);
 
 	return (
 		<LazyMotion features={domAnimation}>
-			<main className="h-screen bg-charcoal text-cream relative px-4 pt-4 flex flex-col overflow-hidden justify-end font-switzer">
+			<m.main
+				initial="initial"
+				animate="animate"
+				className="h-screen bg-charcoal text-cream relative px-4 pt-4 flex flex-col overflow-hidden justify-end font-switzer"
+			>
 				<m.div
 					variants={{
 						initial: {
@@ -21,128 +53,168 @@ export default function Home() {
 							},
 						},
 					}}
-					initial={"initial"}
-					animate={"animate"}
 					className="absolute inset-0 pointer-events-none"
 				>
 					<Image src="/img/bg.png" fill alt="" />
 				</m.div>
 
-				<div className="xl:max-w-[1236px] xl:w-full md:w-11/12 mx-auto md:py-16 p-6 rounded-t-2xl border-cream/10 border-r border-l border-t bg-charcoal/60 relative overflow-hidden w-full backdrop-blur-xl md:h-4/6 flex flex-col">
-					<div className="absolute inset-0 bg-gradient-to-br from-cream/10 from-0% to-50%  to-transparent pointer-events-none"></div>
-					<div className="space-y-16 flex-1">
-						<div className="text-center space-y-7">
-							<div className="space-y-2">
-								<h1 className="text-6xl text-cream font-black font-plein">
-									Enzyme<span className="text-glee">.</span>
-								</h1>
-								<p className="text-2xl font-black font-plein">
-									Your catalyst for better studying.
-								</p>
+				<div
+					className="xl:max-w-[1236px] md:w-11/12 mx-auto rounded-t-2xl relative overflow-hidden md:h-2/3 border-t border-x border-cream/5 lg:border-none"
+					onMouseMove={handleMouseMove}
+				>
+					<m.div
+						className="hidden lg:block lg:pointer-events-none lg:absolute lg:w-64 lg:h-64 lg:bg-cream/60 blur-2xl lg:rounded-full lg:left-[-128px] lg:top-[-128px]"
+						style={{
+							x: mouseX,
+							y: mouseY,
+						}}
+					></m.div>
+					<div className="flex flex-col bg-charcoal/60 backdrop-blur-lg md:py-16 p-6 h-full relative z-10 lg:m-[1px] rounded-t-2xl overflow-hidden lg:border lg:border-cream/5">
+						<m.div
+							className="hidden lg:block lg:pointer-events-none lg:absolute lg:w-64 lg:h-64 lg:bg-cream/20 mix-blend-soft-light blur-2xl lg:rounded-full lg:left-[-128px] lg:top-[-128px]"
+							style={{
+								x: mouseX,
+								y: mouseY,
+							}}
+						></m.div>
+						<div className="space-y-16 flex-1">
+							<div className="text-center space-y-7">
+								<div className="space-y-2">
+									<h1 className="text-6xl text-cream font-black font-plein">
+										Enzyme<span className="text-glee">.</span>
+									</h1>
+									<p className="text-2xl font-black font-plein">
+										Your catalyst for better studying.
+									</p>
+								</div>
+								<div className="max-w-[520px] mx-auto">
+									<p className="md:text-lg font-medium text-gravel">
+										We’re building the next-generation flashcards app. Designed
+										specifically for premed and med students.
+									</p>
+								</div>
 							</div>
-							<div className="max-w-[520px] mx-auto">
-								<p className="text-lg font-medium text-gravel">
-									We’re building the next-generation flashcards app. Designed
-									specifically for premed and med students.
-								</p>
-							</div>
-						</div>
-						<div>
-							<form
-								onSubmit={async (e) => {
-									e.preventDefault();
+							<div>
+								<form
+									onSubmit={async (e) => {
+										e.preventDefault();
+										try {
+											emailSchema.parse(email);
+										} catch (err) {
+											setStatus(STATUS.INVALID_EMAIL);
+											return;
+										}
 
-									if (!email) {
-										setStatus("error");
-									}
+										try {
+											const res = await fetch("/api/subscribe", {
+												method: "POST",
+												body: JSON.stringify({ email }),
+												headers: {
+													"Content-Type": "application/json",
+												},
+											});
 
-									try {
-										const res = await fetch("/api/subscribe", {
-											method: "POST",
-											body: JSON.stringify(email),
-											headers: {
-												"Content-Type": "application/json",
-											},
-										});
-									} catch (err) {
-										console.log(err);
-									}
-								}}
-								className="max-w-[384px] mx-auto space-y-6"
-							>
-								<input
-									type="email"
-									placeholder="Your email..."
-									className="text-lg font-medium text-cream placeholder:text-gravel w-full p-6 block rounded-lg bg-charcoal/20 border border-cream/20"
-									onChange={(e) => setEmail(e.target.value)}
-									value={email}
-								/>
-								<button
-									type="submit"
-									className="text-sm font-semibold text-gravel p-3 block rounded-lg bg-charcoal/20 border border-cream/20 w-full relative"
+											if (!res.ok) {
+												setStatus(STATUS.ERROR);
+											} else {
+												setStatus(STATUS.SUCCESS);
+											}
+										} catch (err) {
+											console.log(err);
+											setStatus(STATUS.ERROR);
+										} finally {
+											setEmail("");
+										}
+									}}
+									className="max-w-[384px] mx-auto space-y-6"
 								>
-									<span>Join the waitlist</span>
-									<div className="absolute inset-0 p-3 flex justify-end items-center pointer-events-none">
-										<svg
-											width="16"
-											height="16"
-											viewBox="0 0 16 16"
-											fill="none"
-											xmlns="http://www.w3.org/2000/svg"
-											className="absolute right-3"
-										>
-											<path
-												d="M6.00002 6.66669L2.66669 10L6.00002 13.3334"
-												stroke="currentColor"
-												stroke-width="1.5"
-												stroke-linecap="round"
-												stroke-linejoin="round"
-											/>
-											<path
-												d="M13.3334 2.66669V7.33335C13.3334 8.0406 13.0524 8.71888 12.5523 9.21897C12.0522 9.71907 11.3739 10 10.6667 10H2.66669"
-												stroke="#D6D3D1"
-												stroke-width="1.5"
-												stroke-linecap="round"
-												stroke-linejoin="round"
-											/>
-										</svg>
+									<div>
+										<input
+											type="text"
+											placeholder="Your email..."
+											className="text-lg font-medium text-cream placeholder:text-gravel w-full p-6 block rounded-lg bg-charcoal/20 border border-cream/20"
+											onChange={(e) => setEmail(e.target.value)}
+											value={email}
+										/>
+										{status === STATUS.INVALID_EMAIL && (
+											<p className="text-xs text-red-400 mt-2">
+												Please enter a valid email address.
+											</p>
+										)}
+										{status === STATUS.ERROR && (
+											<p className="text-xs text-red-400 mt-2">
+												An error occured when subscribing. Please refresh the
+												page and try again.
+											</p>
+										)}
 									</div>
-								</button>
-							</form>
+
+									<button
+										type="submit"
+										className="text-sm font-semibold text-gravel hover:text-cream transition duration-300 ease-in-out p-3 block rounded-lg bg-charcoal/20 border border-cream/20 w-full relative"
+									>
+										<span>Join the waitlist</span>
+										<div className="absolute inset-0 p-3 flex justify-end items-center pointer-events-none">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="16"
+												height="16"
+												fill="none"
+												viewBox="0 0 16 16"
+											>
+												<path
+													stroke="currentColor"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth="1.5"
+													d="M6 6.667L2.667 10 6 13.333"
+												></path>
+												<path
+													stroke="currentColor"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth="1.5"
+													d="M13.333 2.667v4.666A2.667 2.667 0 0110.667 10h-8"
+												></path>
+											</svg>
+										</div>
+									</button>
+								</form>
+							</div>
 						</div>
-					</div>
-					<div className="flex justify-center mt-10">
-						<a
-							href="https://twitter.com/shaunchander"
-							className="text-sm font-semibold flex items-center space-x-2 hover:text-glee transition duration-300 ease-in-out"
-						>
-							<svg
-								width="16"
-								height="16"
-								viewBox="0 0 16 16"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
+						<div className="flex justify-center mt-10">
+							<a
+								href="https://twitter.com/shaunchander"
+								className="text-sm font-semibold flex items-center space-x-2 hover:text-glee transition duration-300 ease-in-out"
 							>
-								<g clip-path="url(#clip0_37_4)">
-									<path
-										d="M15.3333 1.99999C14.6949 2.45031 13.9881 2.79473 13.24 3.01999C12.8385 2.55833 12.3049 2.23112 11.7113 2.08261C11.1178 1.9341 10.493 1.97145 9.92138 2.18963C9.34977 2.4078 8.85895 2.79626 8.51531 3.30247C8.17167 3.80868 7.99179 4.40821 7.99999 5.01999V5.68666C6.82841 5.71704 5.66751 5.4572 4.62066 4.93029C3.57382 4.40338 2.67353 3.62575 1.99999 2.66666C1.99999 2.66666 -0.666677 8.66666 5.33332 11.3333C3.96034 12.2653 2.32476 12.7326 0.666656 12.6667C6.66666 16 14 12.6667 14 4.99999C13.9994 4.81429 13.9815 4.62905 13.9467 4.44666C14.6271 3.77565 15.1072 2.92847 15.3333 1.99999Z"
-										stroke="#FACC15"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</g>
-								<defs>
-									<clipPath id="clip0_37_4">
-										<rect width="16" height="16" fill="white" />
-									</clipPath>
-								</defs>
-							</svg>
-							<span>Follow us on Twitter for product updates</span>
-						</a>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									fill="none"
+									viewBox="0 0 16 16"
+								>
+									<g clipPath="url(#clip0_37_4)">
+										<path
+											stroke="#FACC15"
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth="2"
+											d="M15.333 2a7.266 7.266 0 01-2.093 1.02 2.987 2.987 0 00-5.24 2v.667a7.107 7.107 0 01-6-3.02s-2.667 6 3.333 8.666a7.76 7.76 0 01-4.666 1.334C6.667 16 14 12.667 14 5c0-.186-.018-.37-.053-.553A5.146 5.146 0 0015.333 2z"
+										></path>
+									</g>
+									<defs>
+										<clipPath id="clip0_37_4">
+											<path fill="#fff" d="M0 0H16V16H0z"></path>
+										</clipPath>
+									</defs>
+								</svg>
+								<span>Follow us on Twitter for product updates.</span>
+							</a>
+						</div>
 					</div>
 				</div>
-			</main>
+			</m.main>
 		</LazyMotion>
 	);
 }

@@ -9,7 +9,24 @@
 	}
 
 	input,
-	button {
+	button,
+	a {
 		@apply focus:outline-none focus-visible:ring-2 focus-visible:ring-glee/20 transition duration-300 ease-in-out;
 	}
+
+	/* #container::before {
+		content: "";
+		background: linear-gradient(
+			270deg,
+			rgba(169, 163, 194, 0.2) 0%,
+			rgba(169, 163, 194, 0.048) 100%
+		);
+		@apply absolute inset-0;
+	}
+
+	#container::after {
+		content: "";
+		background: radial-gradient(100px circle at 0 0, red, transparent 40%);
+		@apply absolute inset-0 z-50;
+	} */
 }

@@ -1,5 +1,11 @@
 import type { NextApiHandler } from "next";
 
+import Mailgun from "mailgun.js";
+import formData from "form-data";
+const client = new Mailgun(formData);
+
+const mg = client.client({ username: "api", key: process.env.MAILGUN_API_KEY });
+
 export const handler: NextApiHandler = async (req, res) => {
 	const { email } = req.body;
 
@@ -8,7 +14,21 @@ export const handler: NextApiHandler = async (req, res) => {
 		return;
 	}
 
-	console.log(`Adding ${email} to the waitlist...`);
+	try {
+		console.log(`Adding ${email} to the waitlist...`);
+
+		await mg.lists.members.createMember("info@mg.getenzyme.app", {
+			address: email,
+			upsert: "yes",
+		});
+
+		console.log(`Added ${email} to the waitlist!`);
+
+		return res.status(201).send("Success!");
+	} catch (err) {
+		console.error(err);
+		return res.status(500).send("Error adding email to list.");
+	}
 };
 
 export default handler;
