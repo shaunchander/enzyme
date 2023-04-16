@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { LazyMotion, domAnimation, m, useMotionValue } from "framer-motion";
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useCallback, type MouseEvent } from "react";
 import { z } from "zod";
 
 enum STATUS {
