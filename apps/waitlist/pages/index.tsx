@@ -63,20 +63,13 @@ export default function Home() {
 					onMouseMove={handleMouseMove}
 				>
 					<m.div
-						className="hidden lg:block lg:pointer-events-none lg:absolute lg:w-80 lg:h-80 lg:bg-cream/40 blur-2xl lg:rounded-full lg:left-[-160px] lg:top-[-160px] lg:z-[0]"
+						className="hidden lg:block lg:pointer-events-none lg:absolute lg:w-80 lg:h-80 lg:bg-cream/40 blur-3xl lg:rounded-full lg:left-[-160px] lg:top-[-160px] lg:z-[0] bg-blend-soft-light"
 						style={{
 							x: mouseX,
 							y: mouseY,
 						}}
-					></m.div>
+					/>
 					<div className="flex flex-col bg-charcoal/60 backdrop-blur-lg md:py-16 p-6 h-full relative z-10 lg:m-[1px] rounded-t-2xl overflow-hidden lg:border lg:border-cream/5">
-						<m.div
-							className="hidden lg:block lg:pointer-events-none lg:absolute lg:w-80 lg:h-80 lg:bg-cream/20 mix-blend-soft-light blur-3xl lg:rounded-full lg:left-[-160px] lg:top-[-160px]"
-							style={{
-								x: mouseX,
-								y: mouseY,
-							}}
-						></m.div>
 						<div className="space-y-16 flex-1">
 							<div className="text-center space-y-7">
 								<div className="space-y-2">
