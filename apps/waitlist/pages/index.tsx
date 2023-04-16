@@ -1,10 +1,24 @@
 import Image from "next/image";
-import { LazyMotion, domAnimation, m, useMotionValue } from "framer-motion";
-import { useState, useMemo, useCallback, type MouseEventHandler } from "react";
+import {
+	AnimatePresence,
+	LazyMotion,
+	domAnimation,
+	m,
+	useMotionValue,
+} from "framer-motion";
+import {
+	useState,
+	useMemo,
+	useCallback,
+	type MouseEventHandler,
+	type Dispatch,
+	type SetStateAction,
+} from "react";
 import { z } from "zod";
 
 enum STATUS {
 	IDLE,
+	LOADING,
 	ERROR,
 	SUCCESS,
 	INVALID_EMAIL,
@@ -17,10 +31,6 @@ export default function Home() {
 	const mouseX = useMotionValue(0);
 	const mouseY = useMotionValue(0);
 
-	const emailSchema = useMemo(() => {
-		return z.string().email();
-	}, []);
-
 	const handleMouseMove: MouseEventHandler<HTMLDivElement> = useCallback(
 		(e) => {
 			const rect = e.currentTarget.getBoundingClientRect();
@@ -32,6 +42,10 @@ export default function Home() {
 		},
 		[]
 	);
+
+	const emailSchema = useMemo(() => {
+		return z.string().email();
+	}, []);
 
 	return (
 		<LazyMotion features={domAnimation}>
@@ -48,7 +62,7 @@ export default function Home() {
 						animate: {
 							opacity: 1,
 							transition: {
-								delay: 0.5,
+								delay: 1.5,
 								duration: 2,
 							},
 						},
@@ -70,115 +84,218 @@ export default function Home() {
 						}}
 					/>
 					<div className="flex flex-col bg-charcoal/60 backdrop-blur-lg md:py-16 p-6 h-full relative z-10 lg:m-[1px] rounded-t-2xl overflow-hidden lg:border lg:border-cream/5">
-						<div className="space-y-16 flex-1">
+						<m.div
+							transition={{
+								delay: 0.25,
+								duration: 1,
+							}}
+							variants={{
+								initial: {
+									y: 32,
+									opacity: 0,
+								},
+								animate: {
+									y: 0,
+									opacity: 1,
+								},
+							}}
+							className="space-y-16 flex-1"
+						>
 							<div className="text-center space-y-7">
-								<div className="space-y-2">
+								<div className="space-y-4">
 									<h1 className="text-6xl text-cream font-black font-plein">
 										Enzyme<span className="text-glee">.</span>
 									</h1>
 									<p className="text-2xl font-black font-plein">
-										Your catalyst for better studying.
+										<AnimatePresence mode="wait">
+											{status !== STATUS.SUCCESS && (
+												<span>Your catalyst for better studying.</span>
+											)}
+											{status === STATUS.SUCCESS && (
+												<m.span
+													transition={{
+														duration: 1,
+													}}
+													variants={{
+														initial: {
+															y: 32,
+															opacity: 0,
+														},
+														animate: {
+															y: 0,
+															opacity: 1,
+														},
+													}}
+													className="block"
+												>
+													🎉 <span className="text-glee">{email}</span>, you're
+													on the waitlist.
+												</m.span>
+											)}
+										</AnimatePresence>
 									</p>
 								</div>
 								<div className="max-w-[520px] mx-auto">
-									<p className="md:text-lg font-medium text-gravel">
-										We’re building the next-generation flashcards app. Designed
-										specifically for premed and med students.
-									</p>
+									<AnimatePresence mode="wait">
+										<p className="md:text-lg font-medium text-gravel">
+											<AnimatePresence>
+												{status !== STATUS.SUCCESS && (
+													<span>
+														We’re building the next-generation flashcards app.
+														Designed specifically for premed and med students.
+													</span>
+												)}
+												{status === STATUS.SUCCESS && (
+													<m.span
+														transition={{
+															duration: 1,
+														}}
+														variants={{
+															initial: {
+																y: 32,
+																opacity: 0,
+															},
+															animate: {
+																y: 0,
+																opacity: 1,
+															},
+														}}
+														className="block"
+													>
+														You’ll be among the first to know when Enzyme
+														launches. As a member of our waitlist, you’ll also
+														get product updates and an exclusive chance to join
+														Enzyme during its beta!
+													</m.span>
+												)}
+											</AnimatePresence>
+										</p>
+									</AnimatePresence>
 								</div>
 							</div>
 							<div>
-								<form
-									onSubmit={async (e) => {
-										e.preventDefault();
-										try {
-											emailSchema.parse(email);
-										} catch (err) {
-											setStatus(STATUS.INVALID_EMAIL);
-											return;
-										}
+								{status !== STATUS.SUCCESS && (
+									<form
+										key="form"
+										autoComplete="off"
+										onSubmit={async (e) => {
+											e.preventDefault();
+											setStatus(STATUS.LOADING);
 
-										try {
-											const res = await fetch("/api/subscribe", {
-												method: "POST",
-												body: JSON.stringify({ email }),
-												headers: {
-													"Content-Type": "application/json",
-												},
-											});
-
-											if (!res.ok) {
-												setStatus(STATUS.ERROR);
-											} else {
-												setStatus(STATUS.SUCCESS);
+											try {
+												emailSchema.parse(email);
+											} catch (err) {
+												setStatus(STATUS.INVALID_EMAIL);
+												return;
 											}
-										} catch (err) {
-											console.log(err);
-											setStatus(STATUS.ERROR);
-										} finally {
-											setEmail("");
-										}
-									}}
-									className="max-w-[384px] mx-auto space-y-6"
-								>
-									<div>
-										<input
-											type="text"
-											placeholder="Your email..."
-											className="text-lg font-medium text-cream placeholder:text-gravel w-full p-6 block rounded-lg bg-charcoal/20 border border-cream/20"
-											onChange={(e) => setEmail(e.target.value)}
-											value={email}
-										/>
-										{status === STATUS.INVALID_EMAIL && (
-											<p className="text-xs text-red-400 mt-2">
-												Please enter a valid email address.
-											</p>
-										)}
-										{status === STATUS.ERROR && (
-											<p className="text-xs text-red-400 mt-2">
-												An error occured when subscribing. Please refresh the
-												page and try again.
-											</p>
-										)}
-									</div>
 
-									<button
-										type="submit"
-										className="text-sm font-semibold text-gravel hover:text-cream transition duration-300 ease-in-out p-3 block rounded-lg bg-charcoal/20 border border-cream/20 w-full relative"
+											try {
+												const res = await fetch("/api/subscribe", {
+													method: "POST",
+													body: JSON.stringify({ email: email }),
+													headers: {
+														"Content-Type": "application/json",
+													},
+												});
+
+												if (!res.ok) {
+													setStatus(STATUS.ERROR);
+												} else {
+													setStatus(STATUS.SUCCESS);
+												}
+											} catch (err) {
+												console.log(err);
+												setStatus(STATUS.ERROR);
+											}
+										}}
+										className="max-w-[384px] mx-auto space-y-6"
 									>
-										<span>Join the waitlist</span>
-										<div className="absolute inset-0 p-3 flex justify-end items-center pointer-events-none">
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												width="16"
-												height="16"
-												fill="none"
-												viewBox="0 0 16 16"
-											>
-												<path
-													stroke="currentColor"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-													strokeWidth="1.5"
-													d="M6 6.667L2.667 10 6 13.333"
-												></path>
-												<path
-													stroke="currentColor"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-													strokeWidth="1.5"
-													d="M13.333 2.667v4.666A2.667 2.667 0 0110.667 10h-8"
-												></path>
-											</svg>
+										<div>
+											<label htmlFor="email">
+												<input
+													id="email"
+													name="email"
+													type="text"
+													placeholder="Your email..."
+													className="text-lg font-medium text-cream placeholder:text-gravel w-full p-6 block rounded-lg bg-charcoal/20 hover:border-cream/40 transition duration-300 ease-in-out border border-cream/20"
+													onChange={(e) => setEmail(e.target.value)}
+													value={email}
+												/>
+											</label>
+											{status === STATUS.INVALID_EMAIL && (
+												<p className="text-xs text-red-400 mt-2">
+													Please enter a valid email address.
+												</p>
+											)}
+											{status === STATUS.ERROR && (
+												<p className="text-xs text-red-400 mt-2">
+													An error occured when subscribing. Please refresh the
+													page and try again.
+												</p>
+											)}
 										</div>
-									</button>
-								</form>
+
+										<button
+											type="submit"
+											className="text-sm font-semibold text-gravel hover:text-cream hover:border-cream/40 transition duration-300 ease-in-out p-3 block rounded-lg bg-charcoal/20 border border-cream/20 w-full relative"
+											disabled={status === STATUS.LOADING}
+										>
+											<span>
+												{status === STATUS.LOADING
+													? "Adding to waitlist..."
+													: "Join the waitlist"}
+											</span>
+											<div className="absolute inset-0 p-3 flex justify-end items-center pointer-events-none">
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													width="16"
+													height="16"
+													fill="none"
+													viewBox="0 0 16 16"
+												>
+													<path
+														stroke="currentColor"
+														strokeLinecap="round"
+														strokeLinejoin="round"
+														strokeWidth="1.5"
+														d="M6 6.667L2.667 10 6 13.333"
+													></path>
+													<path
+														stroke="currentColor"
+														strokeLinecap="round"
+														strokeLinejoin="round"
+														strokeWidth="1.5"
+														d="M13.333 2.667v4.666A2.667 2.667 0 0110.667 10h-8"
+													></path>
+												</svg>
+											</div>
+										</button>
+									</form>
+								)}
 							</div>
-						</div>
-						<div className="flex justify-center mt-10">
+						</m.div>
+						<m.div
+							transition={{
+								delay: 1,
+								duration: 1,
+							}}
+							variants={{
+								initial: {
+									y: 32,
+									opacity: 0,
+								},
+								animate: {
+									y: 0,
+									opacity: 1,
+								},
+							}}
+							className="flex justify-center mt-10"
+						>
 							<a
-								href="https://twitter.com/shaunchander"
+								href="https://twitter.com/getenzymeapp"
 								className="text-sm font-semibold flex items-center space-x-2 hover:text-glee transition duration-300 ease-in-out"
+								target="_blank"
+								rel="noreferrer noopener nofollow"
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -204,7 +321,7 @@ export default function Home() {
 								</svg>
 								<span>Follow us on Twitter for product updates.</span>
 							</a>
-						</div>
+						</m.div>
 					</div>
 				</div>
 			</m.main>
