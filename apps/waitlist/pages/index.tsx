@@ -11,10 +11,10 @@ import {
 	useMemo,
 	useCallback,
 	type MouseEventHandler,
-	type Dispatch,
-	type SetStateAction,
+	useEffect,
 } from "react";
 import { z } from "zod";
+import confetti from "canvas-confetti";
 
 enum STATUS {
 	IDLE,
@@ -42,6 +42,18 @@ export default function Home() {
 		},
 		[]
 	);
+
+	useEffect(() => {
+		if (status === STATUS.SUCCESS) {
+			confetti({
+				particleCount: 100,
+				origin: {
+					x: 0.5,
+					y: 2 / 3,
+				},
+			});
+		}
+	}, [status]);
 
 	const emailSchema = useMemo(() => {
 		return z.string().email();
@@ -84,6 +96,10 @@ export default function Home() {
 						}}
 					/>
 					<div className="flex flex-col bg-charcoal/60 backdrop-blur-lg py-16 px-6 h-full relative z-10 lg:m-[1px] rounded-t-2xl overflow-hidden lg:border lg:border-cream/5">
+						<div
+							id="confetti"
+							className="inset-0 absolute pointer-events-none"
+						></div>
 						<m.div
 							transition={{
 								delay: 0.25,
