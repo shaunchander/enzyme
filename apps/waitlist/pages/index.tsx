@@ -52,7 +52,7 @@ export default function Home() {
 			<m.main
 				initial="initial"
 				animate="animate"
-				className="h-screen bg-charcoal text-cream relative px-4 pt-4 flex flex-col overflow-hidden justify-end font-switzer"
+				className="h-full bg-charcoal text-cream relative px-4 pt-4 flex flex-col overflow-hidden justify-end font-switzer"
 			>
 				<m.div
 					variants={{
@@ -83,7 +83,7 @@ export default function Home() {
 							y: mouseY,
 						}}
 					/>
-					<div className="flex flex-col bg-charcoal/60 backdrop-blur-lg md:py-16 p-6 h-full relative z-10 lg:m-[1px] rounded-t-2xl overflow-hidden lg:border lg:border-cream/5">
+					<div className="flex flex-col bg-charcoal/60 backdrop-blur-lg py-16 px-6 h-full relative z-10 lg:m-[1px] rounded-t-2xl overflow-hidden lg:border lg:border-cream/5">
 						<m.div
 							transition={{
 								delay: 0.25,
