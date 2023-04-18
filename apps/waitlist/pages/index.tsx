@@ -147,6 +147,8 @@ export default function Home() {
 				/>
 				<link rel="icon" type="image/x-icon" href="/favicons/favicon.ico" />
 				<meta name="msapplication-TileColor" content="#FACC15" />
+				<meta name="theme-color" content="#FACC15" />
+
 				<meta
 					name="msapplication-TileImage"
 					content="/favicons/favicon-144x144.png"
