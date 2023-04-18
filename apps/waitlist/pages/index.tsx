@@ -37,8 +37,8 @@ export default function Home() {
 	const handleMouseMove: MouseEventHandler<HTMLDivElement> = useCallback(
 		(e) => {
 			const rect = e.currentTarget.getBoundingClientRect();
-			const x = e.clientX - rect.left - 160;
-			const y = e.clientY - rect.top - 160;
+			const x = e.clientX - rect.left - 378;
+			const y = e.clientY - rect.top - 378;
 
 			mouseX.set(x);
 			mouseY.set(y);
@@ -212,15 +212,60 @@ export default function Home() {
 										hide: { opacity: 0, scale: 0.85 },
 										show: { opacity: 1, scale: 1 },
 									}}
+									className="absolute"
 									initial="hide"
 									animate="show"
 									exit="hide"
-									className="hidden lg:block lg:pointer-events-none lg:absolute lg:w-80 lg:h-80 lg:bg-cream/40 blur-3xl lg:rounded-full"
 									style={{
 										left: mouseX,
 										top: mouseY,
 									}}
-								/>
+								>
+									<svg
+										width="756"
+										height="756"
+										viewBox="0 0 756 756"
+										fill="none"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<g filter="url(#filter0_f_156_28)">
+											<rect
+												x="250"
+												y="250"
+												width="256"
+												height="256"
+												rx="128"
+												fill="#D9D9D9"
+											/>
+										</g>
+										<defs>
+											<filter
+												id="filter0_f_156_28"
+												x="0"
+												y="0"
+												width="756"
+												height="756"
+												filterUnits="userSpaceOnUse"
+												color-interpolation-filters="sRGB"
+											>
+												<feFlood
+													flood-opacity="0"
+													result="BackgroundImageFix"
+												/>
+												<feBlend
+													mode="normal"
+													in="SourceGraphic"
+													in2="BackgroundImageFix"
+													result="shape"
+												/>
+												<feGaussianBlur
+													stdDeviation="125"
+													result="effect1_foregroundBlur_156_28"
+												/>
+											</filter>
+										</defs>
+									</svg>
+								</m.div>
 							)}
 						</AnimatePresence>
 						<div className="flex flex-col bg-charcoal/60 backdrop-blur-lg py-16 px-6 h-full relative lg:m-[1px] lg:z-20 rounded-t-2xl overflow-hidden lg:border lg:border-cream/5">
