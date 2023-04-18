@@ -85,7 +85,7 @@ export default function Home() {
 				</m.div>
 
 				<div
-					className="xl:max-w-[1236px] md:w-11/12 mx-auto rounded-t-2xl relative overflow-hidden md:h-2/3 border-t border-x border-cream/5 lg:border-none lg:rounded-none"
+					className="xl:max-w-[1236px] md:w-11/12 mx-auto rounded-t-2xl relative overflow-hidden md:h-2/3 border-t border-x border-cream/5 lg:border-none"
 					onMouseMove={handleMouseMove}
 				>
 					<m.div
