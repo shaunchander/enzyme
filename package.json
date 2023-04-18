@@ -12,8 +12,5 @@
 	"devDependencies": {
 		"turbo": "latest"
 	},
-	"name": "enzyme",
-	"dependencies": {
-		"next-seo": "^6.0.0"
-	}
+	"name": "enzyme"
 }
