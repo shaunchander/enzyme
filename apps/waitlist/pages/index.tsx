@@ -197,7 +197,7 @@ export default function Home() {
 						}}
 						className="absolute inset-0 pointer-events-none"
 					>
-						<Image src="/img/bg.png" fill alt="" />
+						<Image src="/img/bg.png" fill alt="" className="object-cover" />
 					</m.div>
 					<div
 						className="xl:max-w-[1236px] md:w-11/12 mx-auto rounded-t-2xl relative overflow-hidden md:h-2/3 border-t border-x border-cream/5 lg:border-none"
