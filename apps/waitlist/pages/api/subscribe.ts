@@ -24,6 +24,15 @@ export const handler: NextApiHandler = async (req, res) => {
 
 		console.log(`Added ${email} to the waitlist!`);
 
+		console.log(`Sending welcome email to ${email}...`);
+		await mg.messages.create("mg.getenzyme.app", {
+			from: "Shaun @ Enzyme <shaun@getenzyme.app>",
+			to: email,
+			template: "welcome-email",
+			"v:email": email,
+			subject: "Welcome to Enzyme",
+		});
+		console.log(`Sent an email to ${email}...`);
 		return res.status(201).send("Success!");
 	} catch (err) {
 		console.error(err);
