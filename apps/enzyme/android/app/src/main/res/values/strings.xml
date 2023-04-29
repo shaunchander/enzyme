@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">enzyme</string>
+    <string name="title_activity_main">enzyme</string>
+    <string name="package_name">app.getenzyme.app</string>
+    <string name="custom_url_scheme">app.getenzyme.app</string>
+</resources>

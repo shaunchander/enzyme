@@ -1,0 +1,7 @@
+{
+  "name": "enzyme",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}
