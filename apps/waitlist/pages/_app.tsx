@@ -16,7 +16,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 					src="https://umami.services.shaunchander.me/umami.js"
 				></script>
 			</Head>
-			<Component {...pageProps} />;
+			<Component {...pageProps} />
 		</>
 	);
 }
