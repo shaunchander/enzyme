@@ -320,7 +320,7 @@ export default function Home() {
 														className="block"
 													>
 														🎉 <span className="text-glee">{email}</span>,
-														you're on the waitlist.
+														you're on the waitlist!
 													</m.span>
 												)}
 											</AnimatePresence>
