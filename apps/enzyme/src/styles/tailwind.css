@@ -5,6 +5,53 @@
 @layer base {
 	html,
 	body {
-		@apply w-full h-full;
+		@apply w-full h-full overscroll-none;
 	}
+
+	a,
+	button,
+	input,
+	textarea,
+	select {
+		@apply outline-none focus:outline-[0] focus-visible:ring-4 focus-visible:ring-glee/30 focus-visible:transition focus-visible:duration-300 focus-visible:ease-in-out;
+	}
+}
+
+@layer components {
+	h1,
+	.h1 {
+		@apply text-3xl font-black font-plein md:text-4xl;
+	}
+
+	h2,
+	.h2 {
+		@apply text-2xl font-black font-plein;
+	}
+
+	h3,
+	.h3 {
+		@apply text-2xl font-black;
+	}
+
+	p,
+	.p {
+		@apply font-medium text-lg font-switzer;
+	}
+
+	.small {
+		@apply text-sm font-bold font-switzer;
+	}
+
+	.tiny {
+		@apply text-xs font-semibold font-switzer;
+	}
+}
+
+.hide {
+	content: none;
+	@apply relative after:absolute after:bg-charcoal after:inset-0 after:rounded-lg p-1;
+}
+
+.show {
+	@apply p-1 bg-charcoal/60 rounded-lg;
 }
