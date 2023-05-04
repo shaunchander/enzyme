@@ -181,7 +181,7 @@ export default function Home() {
 				<m.main
 					initial="initial"
 					animate="animate"
-					className="h-full bg-charcoal text-cream relative px-4 pt-4 flex flex-col overflow-hidden justify-end font-switzer"
+					className="min-h-full bg-charcoal text-cream relative px-4 pt-4 flex flex-col overflow-hidden justify-end font-switzer"
 				>
 					<m.div
 						transition={{
