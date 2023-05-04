@@ -291,7 +291,7 @@ export default function Home() {
 								</m.div>
 							)}
 						</AnimatePresence>
-						<div className="flex flex-col bg-charcoal/60 backdrop-blur-lg md:py-16 py-10 px-6 h-full relative lg:m-[1px] lg:z-20 rounded-t-2xl overflow-hidden lg:border lg:border-cream/5">
+						<div className="flex flex-col bg-charcoal/60 backdrop-blur-lg md:py-16 lg:pb-32 py-10 px-6 h-full relative lg:m-[1px] lg:z-20 rounded-t-2xl overflow-hidden lg:border lg:border-cream/5">
 							<div
 								id="confetti"
 								className="inset-0 absolute pointer-events-none"
