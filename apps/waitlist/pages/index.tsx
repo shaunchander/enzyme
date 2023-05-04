@@ -184,26 +184,6 @@ export default function Home() {
 					className="min-h-full bg-charcoal text-cream relative px-4 pt-4 flex flex-col overflow-hidden justify-end font-switzer"
 				>
 					<m.div
-						transition={{
-							delay: 2,
-							duration: 1,
-						}}
-						initial={{ opacity: 0, y: 12 }}
-						animate={{ opacity: 1, y: 0 }}
-						className="sticky top-0 inset-x-0 flex justify-center mb-5 z-20"
-					>
-						<a
-							href="https://twitter.com/shaunchander/status/1652965784535150593"
-							target="_blank"
-							rel="noopener noreferrer nofollow"
-							className="py-2 px-4 rounded-full border-cream/10 border text-sm font-semibold inline-flex items-center gap-x-2 hover:border-cream/60 transition duration-300 ease-in-out text-gravel hover:text-cream"
-						>
-							<Info className="w-5 h-5" />
-							<span>Checkout the product demo on Twitter</span>
-						</a>
-					</m.div>
-
-					<m.div
 						variants={{
 							initial: {
 								opacity: 0,
