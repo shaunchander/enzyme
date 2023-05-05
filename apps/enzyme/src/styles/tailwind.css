@@ -15,6 +15,10 @@
 	select {
 		@apply outline-none focus:outline-[0] focus-visible:ring-4 focus-visible:ring-glee/30 focus-visible:transition focus-visible:duration-300 focus-visible:ease-in-out;
 	}
+
+	#deck-input ul {
+		@apply list-disc list-inside;
+	}
 }
 
 @layer components {

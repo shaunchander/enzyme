@@ -6,15 +6,28 @@
 	import { HomeIcon, FolderIcon, SettingsIcon, PlusIcon, ZapIcon } from 'svelte-feather-icons';
 	import Button from '@components/Button.svelte';
 	import SafeArea from '@components/SafeArea.svelte';
+	import Modal from '@components/Modal.svelte';
 
 	import { page } from '$app/stores';
 	import { cn } from 'nano-classnames';
 	import { ArrowLeftIcon } from 'svelte-feather-icons';
+	import { fade } from 'svelte/transition';
+
+	let open = false;
+
+	const handleClose = () => {
+		open = false;
+	};
 </script>
 
 <main class="h-full flex flex-col relative md:flex-row">
 	<div class="relative flex-1 flex flex-col z-10 md:order-last overflow-auto">
 		<SafeArea>
+			{#if open}
+				<div transition:fade>
+					<Modal ref={handleClose} />
+				</div>
+			{/if}
 			{#if $page.data.title}
 				<div
 					class={cn('md:flex md:justify-between md:items-center', [
@@ -33,7 +46,7 @@
 									<PlusIcon slot="icon" size="16" />
 								</Button>
 							</li>
-							<li>
+							<li on:click={() => (open = true)}>
 								<Button style="primary">
 									Grind Mode
 									<ZapIcon slot="icon" size="16" />

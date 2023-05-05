@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { PlusCircleIcon } from 'svelte-feather-icons';
+	import DeckInput from '@components/DeckInput.svelte';
 </script>
 
 <div>
 	<ul class="space-y-2">
 		<li class="flex items-center gap-x-2">
-			<div class="rounded-lg bg-charcoal/60 h-32 flex-1 p-4">
-				<span class="text-sm">What are V1 cells?</span>
+			<div class="w-1/2">
+				<DeckInput />
 			</div>
 			<div id="test" class="rounded-lg bg-charcoal/60 h-32 flex-1 p-4">
 				<span class="text-sm">These cells are orientation selective.</span>

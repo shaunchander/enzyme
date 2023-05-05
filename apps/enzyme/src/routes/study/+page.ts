@@ -1,5 +1,6 @@
 export function load() {
 	return {
-		hide: true
+		hide: true,
+		grind: true
 	};
 }
