@@ -10,7 +10,8 @@ const config = {
 	kit: {
 		alias: {
 			'@styles/*': './src/styles/*',
-			'@components/*': './src/components/*'
+			'@components/*': './src/components/*',
+			'@lib/*': './src/lib/*'
 		},
 		adapter: adapter({
 			fallback: 'index.html',

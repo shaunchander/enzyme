@@ -13,7 +13,11 @@
 	input,
 	textarea,
 	select {
-		@apply outline-none focus:outline-[0] focus-visible:ring-4 focus-visible:ring-glee/30 focus-visible:transition focus-visible:duration-300 focus-visible:ease-in-out;
+		@apply focus:outline-[0] focus-visible:ring-4 focus-visible:ring-glee/30 focus-visible:transition focus-visible:duration-300 focus-visible:ease-in-out;
+	}
+
+	a:hover {
+		@apply hover:text-glee duration-300 ease-in-out;
 	}
 
 	#deck-input ul {
@@ -34,7 +38,7 @@
 
 	h3,
 	.h3 {
-		@apply text-2xl font-black;
+		@apply text-2xl font-black font-plein;
 	}
 
 	p,

@@ -1,3 +1,3 @@
-<div class="flex flex-col flex-1 relative p-6 md:p-12">
+<div class="p-6 md:p-1 min-h-full w-full flex-1 flex flex-col">
 	<slot />
 </div>
