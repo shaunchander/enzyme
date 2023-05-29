@@ -12,7 +12,8 @@
 		"strict": true,
 		"paths": {
 			"@components/*": ["src/components/*"],
-			"@lib/*": ["src/lib/*"]
+			"@lib/*": ["src/lib/*"],
+			"@stores/*": ["src/stores/*"]
 		}
 	}
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias

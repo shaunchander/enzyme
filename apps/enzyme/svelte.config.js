@@ -11,7 +11,8 @@ const config = {
 		alias: {
 			'@styles/*': './src/styles/*',
 			'@components/*': './src/components/*',
-			'@lib/*': './src/lib/*'
+			'@lib/*': './src/lib/*',
+			'@stores/*': './src/stores/*'
 		},
 		adapter: adapter({
 			fallback: 'index.html',

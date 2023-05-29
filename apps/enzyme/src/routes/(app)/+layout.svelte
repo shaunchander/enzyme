@@ -3,83 +3,20 @@
 	import '@styles/switzer.css';
 	import '@styles/tailwind.css';
 
-	import { HomeIcon, FolderIcon, SettingsIcon, PlusIcon, ZapIcon } from 'svelte-feather-icons';
-	import Button from '@components/Button.svelte';
+	import { HomeIcon, FolderIcon, SettingsIcon } from 'svelte-feather-icons';
 	import SafeArea from '@components/SafeArea.svelte';
-	import Modal from '@components/Modal.svelte';
 
 	import { page } from '$app/stores';
 	import { cn } from 'nano-classnames';
-	import { ArrowLeftIcon } from 'svelte-feather-icons';
-	import { fade } from 'svelte/transition';
-
-	let open = false;
-
-	const handleClose = () => {
-		open = false;
-	};
 </script>
 
-<main class="h-full flex flex-col relative md:flex-row">
-	<div class="relative flex-1 flex flex-col z-10 md:order-last overflow-auto">
-		<SafeArea>
-			{#if open}
-				<div transition:fade>
-					<Modal ref={handleClose} />
-				</div>
-			{/if}
-			{#if $page.data.title}
-				<div
-					class={cn('md:flex md:justify-between md:items-center', [
-						$page.data.title,
-						'mb-6 md:mb-6',
-						'md:mb-6'
-					])}
-				>
-					<h1>{$page.data.title}<span class="text-glee">.</span></h1>
-					<span />
-					<div class="hidden md:block">
-						<ul class="flex items-center gap-x-4">
-							<li>
-								<Button style="secondary">
-									Create New
-									<PlusIcon slot="icon" size="16" />
-								</Button>
-							</li>
-							<li on:click={() => (open = true)}>
-								<Button style="primary">
-									Grind Mode
-									<ZapIcon slot="icon" size="16" />
-								</Button>
-							</li>
-						</ul>
-					</div>
-				</div>
-			{:else}
-				<div class="flex items-center justify-between">
-					<a
-						href="/"
-						class="small text-gravel/60 border border-gravel/20 rounded-full px-6 py-2 inline-flex items-center gap-x-3 hover:border-gravel/60 hover:text-gravel duration-300 ease-in-out transition"
-					>
-						<ArrowLeftIcon size="16" />
-						<span>Return to decks</span></a
-					>
-
-					{#if !$page.data.hide}
-						<a href="/study">
-							<Button style="primary">Study Deck</Button>
-						</a>
-					{/if}
-				</div>
-			{/if}
-
-			<div class="flex flex-col flex-1">
-				<slot />
-			</div>
-		</SafeArea>
+<div class="flex flex-col md:flex-row h-full">
+	<div id="app" class="overflow-auto relative z-10 md:order-last flex-1 flex flex-col">
+		<slot />
 	</div>
 	<div
-		class="p-4 bg-ash relative z-20 md:order-first md:border-t-0 md:p-5 md:border-r md:border-r-cream/10"
+		id="menu"
+		class="p-4 bg-ash border-t border-cream/10 relative z-20 md:order-first md:border-t-0 md:py-6 md:border-r md:border-r-cream/10"
 	>
 		<div
 			class="bg-gradient-to-t from-charcoal to-transparent h-12 absolute inset-x-0 top-0 transform -translate-y-full pointer-events-none md:hidden border-b border-b-cream/10"
@@ -110,9 +47,10 @@
 				<li>
 					<a
 						href="/"
-						class="flex flex-col
-			 justify-center items-center space-y-1"
-						class:text-glee={$page.route === '/'}
+						class={cn(
+							'flex flex-col justify-center items-center space-y-1 hover:text-glee duration-300 ease-in-out transition',
+							[$page.url.pathname === '/', 'text-glee', 'text-gravel']
+						)}
 					>
 						<HomeIcon size="20" />
 						<p class="tiny md:sr-only">Home</p>
@@ -121,8 +59,10 @@
 				<li>
 					<a
 						href="folders"
-						class="flex flex-col
-			 justify-center items-center space-y-1"
+						class={cn(
+							'flex flex-col justify-center items-center space-y-1 hover:text-glee duration-300 ease-in-out transition',
+							[$page.url.pathname === '/folders', 'text-glee', 'text-gravel']
+						)}
 					>
 						<FolderIcon size="20" />
 						<p class="tiny md:sr-only">Your Folders</p>
@@ -131,24 +71,24 @@
 				<li>
 					<a
 						href="/settings"
-						class="flex flex-col
-			 justify-center items-center space-y-1"
+						class={cn(
+							'flex flex-col justify-center items-center space-y-1 hover:text-glee duration-300 ease-in-out transition',
+							[$page.url.pathname === '/settings', 'text-glee', 'text-gravel']
+						)}
 					>
 						<SettingsIcon size="20" />
 						<p class="tiny md:sr-only">Settings</p>
 					</a>
 				</li>
 			</ul>
-			<div class="hidden md:block">
+			<!-- <div class="hidden md:block">
 				<img src="/pfp.png" alt="" />
-			</div>
+			</div> -->
 		</div>
 	</div>
-	<div>
-		<img
-			class="absolute inset-0 w-full h-full object-cover pointer-events-none"
-			src="/bg.svg"
-			alt=""
-		/>
-	</div>
-</main>
+	<img
+		class="absolute inset-0 w-full h-full object-cover pointer-events-none"
+		src="/bg.png"
+		alt=""
+	/>
+</div>

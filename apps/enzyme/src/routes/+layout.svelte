@@ -1,9 +1,14 @@
 <script lang="ts">
+	import FlashMessage from '@components/FlashMessage.svelte';
 	import '@styles/plein.css';
 	import '@styles/switzer.css';
 	import '@styles/tailwind.css';
+	import { App } from 'konsta/svelte';
 </script>
 
-<main class="min-h-full flex flex-col relative md:flex-row">
-	<slot />
-</main>
+<App theme="material" safeAreas>
+	<main class="h-full flex flex-col relative">
+		<slot />
+	</main>
+	<FlashMessage />
+</App>

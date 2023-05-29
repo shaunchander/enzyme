@@ -1,13 +1,82 @@
-<script>
-	import Button from '@components/Button.svelte';
-	import { ZapIcon, CheckIcon } from 'svelte-feather-icons';
+<script lang="ts">
+	import { XIcon } from 'svelte-feather-icons';
+	import { fade, fly } from 'svelte/transition';
+	import { beforeUpdate } from 'svelte';
+	import { onMount } from 'svelte';
+	import { portal } from '@lib/portal';
 
-	let selected = [];
+	export let title: string;
+	export let show: boolean;
+	let app: HTMLElement | null;
+	let menu: HTMLElement | null;
 
-	export let ref;
+	let modalContainer: HTMLDivElement;
+
+	onMount(() => {
+		app = document.querySelector<HTMLElement>('#app');
+		menu = document.querySelector<HTMLElement>('#menu');
+	});
+
+	beforeUpdate(() => {
+		if (app && menu) {
+			if (show) {
+				app.style.overflow = 'hidden';
+				menu.style.zIndex = '0';
+			} else {
+				app.style.overflow = 'auto';
+				menu.style.zIndex = '20';
+			}
+		}
+	});
 </script>
 
-<div class="fixed inset-0 bg-black/60 flex flex-col items-center justify-center">
+<svelte:window
+	on:keydown={(e) => {
+		if (e.key === 'Escape') {
+			show = false;
+		}
+	}}
+	on:click={(e) => {
+		if (show) {
+			if (e.target === modalContainer) {
+				show = false;
+			}
+		}
+	}}
+/>
+
+{#if show}
+	<div
+		use:portal
+		bind:this={modalContainer}
+		transition:fade
+		class="fixed inset-0 bg-black/60 backdrop-blur-sm p-6 flex flex-col justify-center items-center z-50"
+	>
+		<div
+			in:fly={{ delay: 0.1, y: 32 }}
+			out:fly={{ y: 32 }}
+			class="max-w-md w-full bg-charcoal p-6 rounded-lg space-y-4 overflow-auto"
+		>
+			<div>
+				<div class="flex items-center justify-between">
+					<h3>{title}<span class="text-glee">.</span></h3>
+					<button class="hover:text-glee duration-300 ease-in-out" on:click={() => (show = false)}>
+						<XIcon size="16" />
+					</button>
+				</div>
+			</div>
+			<div class="w-full bg-gradient-to-r from-transparent via-cream/20 to-transparent h-px" />
+			<div>
+				<slot />
+			</div>
+			<div>
+				<slot name="buttons" />
+			</div>
+		</div>
+	</div>
+{/if}
+
+<!-- <div class="fixed inset-0 bg-black/60 flex flex-col items-center justify-center">
 	<div
 		class="rounded-lg w-2/5 mx-auto border-glee/20 border bg-charcoal p-6 space-y-6 relative overflow-hidden"
 	>
@@ -83,4 +152,4 @@
 			</a>
 		</div>
 	</div>
-</div>
+</div> -->

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Card from '@components/Card.svelte';
+	import Box from '@components/Box.svelte';
 	import Button from '@components/Button.svelte';
 	import TextInput from '@components/TextInput.svelte';
 
-	import { z, type ZodFormattedError } from 'zod';
+	import { z } from 'zod';
 	import { supabase } from '@lib/supabase';
 	import { CheckCircleIcon } from 'svelte-feather-icons';
 	import { parseError } from '@lib/parseError';
@@ -49,6 +49,9 @@
 			const result = await supabase.auth.signUp({ email, password });
 			if (result.error) {
 				status = STATUS.ERROR;
+				errors = {
+					email: { _errors: [result.error.message] }
+				};
 				return;
 			} else {
 				status = STATUS.SUCCESS;
@@ -64,7 +67,7 @@
 		Sign up for Enzyme, the flashcards app built for premed and med students.
 	</p>
 </div>
-<Card withCustomPadding="px-4 py-8">
+<Box withCustomPadding="px-4 py-8">
 	{#if status === STATUS.SUCCESS}
 		<div class="space-y-2">
 			<div>
@@ -73,18 +76,17 @@
 			<div>
 				<p class="text-gravel text-center">
 					Thanks for signing up! Before you can access Enzyme, you'll need to verify your email. We
-					sent you a verifaction link to your inbox.
+					sent you a verification link to your inbox.
 				</p>
 			</div>
 		</div>{:else}
-		<div class="space-y-8">
+		<form on:submit:preventDefault={handleRegistration} class="space-y-8">
 			<div class="space-y-2">
-				<form class="space-y-2">
+				<div class="space-y-2">
 					<TextInput
 						name="email"
 						placeholder="Email"
 						type="email"
-						required
 						bind:value={email}
 						error={parseError('email', errors)}
 					/>
@@ -92,7 +94,7 @@
 						name="password"
 						placeholder="Password"
 						type="password"
-						required
+						autocomplete="new-password"
 						bind:value={password}
 						error={parseError('password', errors)}
 					/>
@@ -100,29 +102,29 @@
 						name="confirm_password"
 						placeholder="Confirm Password"
 						type="password"
-						required
+						autocomplete="new-password"
 						bind:value={confirmPassword}
 						error={parseError('confirmPassword', errors)}
 					/>
-				</form>
-				<a href="#" class="tiny inline-block text-cream/20">Forgot your password?</a>
+				</div>
 			</div>
 			<div>
 				<ul class="space-y-2">
 					<li>
 						<Button
+							type="submit"
 							on:click={handleRegistration}
 							style="primary"
 							disabled={status === STATUS.LOADING}>Create my account!</Button
 						>
 					</li>
 					<li>
-						<Button type="a" href="/login" style="secondary"
+						<Button element="a" href="/login" style="secondary"
 							>I got an account, login instead.</Button
 						>
 					</li>
 				</ul>
 			</div>
-		</div>
+		</form>
 	{/if}
-</Card>
+</Box>

@@ -12,6 +12,9 @@
 		},
 		"sync": {
 			"outputs": ["ios/**", "android/**"]
+		},
+		"preview": {
+			"outputs": ["ios/**", "android/**"]
 		}
 	}
 }

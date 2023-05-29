@@ -3,7 +3,7 @@
 </script>
 
 <SafeArea>
-	<div class="mx-auto space-y-8 max-w-xs flex flex-col flex-1 justify-center">
+	<div class="mx-auto space-y-8 max-w-xs w-full flex flex-col flex-1 justify-center">
 		<slot />
 	</div>
 </SafeArea>
